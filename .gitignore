@@ -1,0 +1,4 @@
+.venv
+scrapyUFC/__pycache__
+scrapyUFC/spiders/__pycache__
+*.csv
