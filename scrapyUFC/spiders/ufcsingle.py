@@ -22,10 +22,10 @@ class UfcsingleSpider(scrapy.Spider):
 
         weight_class = fight_card.css('span[class="weight_class"]::text').get()
 
-        fight_card_resume = fight_card.css('div[class="fight_card_resume"]').css('td::text').getall()
-        method = fight_card_resume[1]
-        round = fight_card_resume[3]
-        time = fight_card_resume[4]
+        fight_card_resume = response.css('table[class="fight_card_resume"]').css('td::text').getall()
+        method = fight_card_resume[1].strip()
+        round = fight_card_resume[3].strip()
+        time = fight_card_resume[4].strip()
 
         yield {
            "event": event,
