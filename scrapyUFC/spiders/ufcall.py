@@ -24,16 +24,17 @@ class UfcallSpider(scrapy.Spider):
                 
 
     def parse_fights(self, response):
+        # for the main event fighters
         event = response.css('h1').css('span[itemprop="name"]::text').get()
 
         fight_card = response.css('div[class="fight_card"]')
 
         info_left = fight_card.css('div[class="fighter left_side"]') 
-        left_fighter = info_left.css('h3').css('span[itemprop="name"]::text').get()
+        left_fighter = info_left.css('h3 span[itemprop="name"]::text').get()
         left_status = remove_tags(info_left.css('span').getall()[2])
     
         info_right = fight_card.css('div[class="fighter right_side"]')
-        right_fighter = info_right.css('h3').css('span[itemprop="name"]::text').get()
+        right_fighter = info_right.css('h3 span[itemprop="name"]::text').get()
         right_status = remove_tags(info_right.css('span').getall()[2])
 
         weight_class = fight_card.css('span[class="weight_class"]::text').get()
@@ -42,6 +43,9 @@ class UfcallSpider(scrapy.Spider):
         method = fight_card_resume[1].strip()
         round = fight_card_resume[3].strip()
         time = fight_card_resume[4].strip()
+
+        left_fighter_url = info_left.css('h3 a::attr(href)').get()
+        right_fighter_url = info_right.css('h3 a::attr(href)').get()
 
         yield {
            "event": event,
@@ -52,7 +56,11 @@ class UfcallSpider(scrapy.Spider):
            "weight_class": weight_class,
            "method": method,
            "round": round,
-           "time": time
+           "time": time,
+           "left_fighter_url": left_fighter_url,
+           "right_fighter_url": right_fighter_url
         }
+
+        # for the rest of the card
 
 
