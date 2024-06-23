@@ -12,20 +12,20 @@ class UfcallSpider(scrapy.Spider):
     def parse(self, response):
         event_table = response.css('table[class="new_table event"]')
         for event in event_table.css('tr[onclick]'):
-            date: dt = dt.datetime.fromisoformat(event.css('meta[itemprop="startDate"]::attr(content)').get()).replace(tzinfo=None)
+            date = dt.datetime.fromisoformat(event.css('meta[itemprop="startDate"]::attr(content)').get()).replace(tzinfo=None)
             if date < dt.datetime.now():
                 urls = event.css('a::attr(href)').getall()
                 for url in urls:
                     if url not in self.unique_urls:
                         self.unique_urls.add(url)
-                        yield scrapy.Request(url=f"https://www.sherdog.com{url}", callback=self.parse_fights)
+                        yield scrapy.Request(url=f"https://www.sherdog.com{url}", callback=self.parse_fights, meta={'url': url})
         for page_no in range(1, 9):
             yield response.follow(f"https://www.sherdog.com/organizations/Ultimate-Fighting-Championship-UFC-2/recent-events/{page_no}", callback=self.parse)
                 
 
     def parse_fights(self, response):
         # for the main event fighters
-        event = response.css('h1').css('span[itemprop="name"]::text').get()
+        event_title = response.css('h1').css('span[itemprop="name"]::text').get()
 
         fight_card = response.css('div[class="fight_card"]')
 
@@ -48,7 +48,7 @@ class UfcallSpider(scrapy.Spider):
         right_fighter_url = info_right.css('h3 a::attr(href)').get()
 
         yield {
-           "event": event,
+           "event_title": event_title,
            "left_fighter": left_fighter,
            "left_status": left_status,
            "right_fighter": right_fighter,
@@ -62,5 +62,36 @@ class UfcallSpider(scrapy.Spider):
         }
 
         # for the rest of the card
+        event_title = response.css('h1 span[itemprop="name"]::text').get() # unsure why I have to initialize this again
+        sub_events = response.css('table[class="new_table result"] tr[itemprop="subEvent"]')
+        for event in sub_events:
+            left_info = event.css('div[class="fighter_list left"]')
+            left_fighter = ' '.join(left_info.css('span[itemprop="name"]::text').getall())
+            left_status = remove_tags(left_info.css('div[class="fighter_result_data"] span').getall()[1])
 
+            right_info = event.css('div[class="fighter_list right"]')
+            right_fighter = ' '.join(right_info.css('span[itemprop="name"]::text').getall())
+            right_status = remove_tags(right_info.css('div[class="fighter_result_data"] span').getall()[1])
+
+            weight_class = event.css('span[class="weight_class"]::text').get()
+            method = event.css('td[class="winby"] b::text').get()
+            round = event.css('td::text')[-2] 
+            time = event.css('td::text')[-1]
+
+            left_fighter_url = left_info.css('a[itemprop="url"]::attr(href)').get()
+            right_fighter_url = right_info.css('a[itemprop="url"]::attr(href)').get()
+
+            yield {
+                "event_title": event_title,
+                "left_fighter": left_fighter,
+                "left_status": left_status,
+                "right_fighter": right_fighter,
+                "right_status": right_status,
+                "weight_class": weight_class,
+                "method": method,
+                "round": round,
+                "time": time,
+                "left_fighter_url": left_fighter_url,
+                "right_fighter_url": right_fighter_url
+            }   
 

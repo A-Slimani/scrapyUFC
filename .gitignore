@@ -1,4 +1,5 @@
 .venv
 scrapyUFC/__pycache__
 scrapyUFC/spiders/__pycache__
+spider.log
 *.csv
