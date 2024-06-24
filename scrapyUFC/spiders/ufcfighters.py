@@ -1,3 +1,4 @@
+from ..items import FighterInfoItem 
 import scrapy
 import csv
 
@@ -36,18 +37,19 @@ class UfcfightersSpider(scrapy.Spider):
         losses_by_sub = int(losses_by[1])
         losses_by_dec = int(losses_by[2])
 
-        yield {
-            'name': name,
-            'nationality': nationality,
-            'locality': locality, 
-            'age': age,
-            'weight_class': weight_class,
-            'wins': wins,
-            'wins_by_ko_tko': wins_by_ko_tko,
-            'wins_by_sub': wins_by_sub,
-            'wins_by_dec': wins_by_dec,
-            'losses': losses,
-            'losses_by_ko_tko': losses_by_ko_tko,
-            'losses_by_sub': losses_by_sub,
-            'losses_by_dec': losses_by_dec,
-        }
+        fighter_info_item = FighterInfoItem( 
+            name=name,
+            nationality=nationality,
+            locality=locality,
+            age=age,
+            weight_class=weight_class,
+            wins=wins,
+            wins_by_ko_tko=wins_by_ko_tko,
+            wins_by_sub=wins_by_sub,
+            wins_by_dec=wins_by_dec,
+            losses=losses,
+            losses_by_ko_tko=losses_by_ko_tko,
+            losses_by_sub=losses_by_sub,
+            losses_by_dec=losses_by_dec
+        )
+        yield fighter_info_item

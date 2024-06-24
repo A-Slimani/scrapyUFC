@@ -1,6 +1,7 @@
+from w3lib.html import remove_tags
+from ..items import FightItem
 import scrapy
 import datetime as dt
-from w3lib.html import remove_tags
 
 class UfcallSpider(scrapy.Spider):
     name = "ufcall"
@@ -19,7 +20,7 @@ class UfcallSpider(scrapy.Spider):
                     if url not in self.unique_urls:
                         self.unique_urls.add(url)
                         yield scrapy.Request(url=f"https://www.sherdog.com{url}", callback=self.parse_fights, meta={'url': url})
-        for page_no in range(1, 9):
+        for page_no in range(1, 10):
             yield response.follow(f"https://www.sherdog.com/organizations/Ultimate-Fighting-Championship-UFC-2/recent-events/{page_no}", callback=self.parse)
                 
 
@@ -41,25 +42,26 @@ class UfcallSpider(scrapy.Spider):
 
         fight_card_resume = response.css('table[class="fight_card_resume"]').css('td::text').getall()
         method = fight_card_resume[1].strip()
-        round = fight_card_resume[3].strip()
+        round = int(fight_card_resume[3].strip())
         time = fight_card_resume[4].strip()
 
         left_fighter_url = info_left.css('h3 a::attr(href)').get()
         right_fighter_url = info_right.css('h3 a::attr(href)').get()
 
-        yield {
-           "event_title": event_title,
-           "left_fighter": left_fighter,
-           "left_status": left_status,
-           "right_fighter": right_fighter,
-           "right_status": right_status,
-           "weight_class": weight_class,
-           "method": method,
-           "round": round,
-           "time": time,
-           "left_fighter_url": left_fighter_url,
-           "right_fighter_url": right_fighter_url
-        }
+        fight_item = FightItem(
+            event_title=event_title,
+            left_fighter=left_fighter,
+            left_status=left_status,
+            right_fighter=right_fighter,
+            right_status=right_status,
+            weight_class=weight_class,
+            method=method,
+            round=round,
+            time=time,
+            left_fighter_url=left_fighter_url,
+            right_fighter_url=right_fighter_url 
+        )
+        yield fight_item
 
         # for the rest of the card
         event_title = response.css('h1 span[itemprop="name"]::text').get() # unsure why I have to initialize this again
@@ -81,17 +83,17 @@ class UfcallSpider(scrapy.Spider):
             left_fighter_url = left_info.css('a[itemprop="url"]::attr(href)').get()
             right_fighter_url = right_info.css('a[itemprop="url"]::attr(href)').get()
 
-            yield {
-                "event_title": event_title,
-                "left_fighter": left_fighter,
-                "left_status": left_status,
-                "right_fighter": right_fighter,
-                "right_status": right_status,
-                "weight_class": weight_class,
-                "method": method,
-                "round": round,
-                "time": time,
-                "left_fighter_url": left_fighter_url,
-                "right_fighter_url": right_fighter_url
-            }   
-
+            fight_item = FightItem(
+                event_title=event_title,
+                left_fighter=left_fighter,
+                left_status=left_status,
+                right_fighter=right_fighter,
+                right_status=right_status,
+                weight_class=weight_class,
+                method=method,
+                round=round,
+                time=time,
+                left_fighter_url=left_fighter_url,
+                right_fighter_url=right_fighter_url 
+            )
+            yield fight_item

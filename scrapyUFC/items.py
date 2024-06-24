@@ -1,12 +1,31 @@
-# Define here the models for your scraped items
-#
-# See documentation in:
-# https://docs.scrapy.org/en/latest/topics/items.html
+from dataclasses import dataclass
 
-import scrapy
+@dataclass
+class FightItem:
+    event_title: str
+    left_fighter: str
+    left_status: str
+    right_fighter: str
+    right_status: str
+    weight_class: str
+    method: str
+    round: int 
+    time: str 
+    left_fighter_url: str
+    right_fighter_url: str
 
-
-class ScrapyufcItem(scrapy.Item):
-    # define the fields for your item here like:
-    # name = scrapy.Field()
-    pass
+@dataclass
+class FighterInfoItem:
+    name: str
+    nationality: str
+    locality: str
+    age: int
+    weight_class: str
+    wins: int
+    wins_by_ko_tko: int
+    wins_by_sub: int
+    wins_by_dec: int
+    losses: int
+    losses_by_ko_tko: int
+    losses_by_sub: int
+    losses_by_dec: int

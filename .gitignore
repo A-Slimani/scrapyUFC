@@ -3,3 +3,4 @@ scrapyUFC/__pycache__
 scrapyUFC/spiders/__pycache__
 *.log
 *.csv
+.env
