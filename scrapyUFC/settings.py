@@ -1,3 +1,6 @@
+import dotenv
+import os
+
 # Scrapy settings for scrapyUFC project
 #
 # For simplicity, this file contains only settings considered important or
@@ -66,9 +69,9 @@ CONCURRENT_REQUESTS = 32
 
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
-#ITEM_PIPELINES = {
-#    "scrapyUFC.pipelines.ScrapyufcPipeline": 300,
-#}
+ITEM_PIPELINES = {
+    "scrapyUFC.pipelines.UfcPipeline": 300,
+}
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html
@@ -95,3 +98,15 @@ CONCURRENT_REQUESTS = 32
 REQUEST_FINGERPRINTER_IMPLEMENTATION = "2.7"
 TWISTED_REACTOR = "twisted.internet.asyncioreactor.AsyncioSelectorReactor"
 FEED_EXPORT_ENCODING = "utf-8"
+
+# Load environment variables from .env file
+env = dotenv.load_dotenv()
+
+DB_USER = os.getenv("DB_USER")
+DB_PASSWORD = os.getenv("DB_PASSWORD")
+DB_HOST = os.getenv("DB_HOST")
+DB_PORT = os.getenv("DB_PORT")
+DB_NAME = os.getenv("DB_NAME")
+
+# Use the variables to connect to the PostgresDB
+CONNECTION_STRING = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"

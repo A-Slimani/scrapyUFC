@@ -1,26 +1,27 @@
 from dataclasses import dataclass
+from typing import Optional 
 
 @dataclass
 class FightItem:
+    id: str
     event_title: str
-    left_fighter: str
+    left_fighter_id: str
     left_status: str
-    right_fighter: str
+    right_fighter_id: str
     right_status: str
     weight_class: str
     method: str
-    round: int 
-    time: str 
-    left_fighter_url: str
-    right_fighter_url: str
+    round: Optional[int] 
+    time: Optional[str] 
 
 @dataclass
-class FighterInfoItem:
+class FighterItem:
+    id: str
     name: str
-    nationality: str
-    locality: str
-    age: int
-    weight_class: str
+    nationality: Optional[str]
+    locality: Optional[str]
+    age: Optional[int]
+    weight_class: Optional[str]
     wins: int
     wins_by_ko_tko: int
     wins_by_sub: int
