@@ -30,7 +30,8 @@ class UfcallSpider(scrapy.Spider):
     def parse_fights(self, response):
         # for the main event fighters
         event_title: str = response.css('h1').css('span[itemprop="name"]::text').get()
-
+        date: str = response.css('meta[itemprop="startDate"]::attr(content)').get()
+        location: str = response.css('span[itemprop="location"]::text').get()
         fight_card = response.css('div[class="fight_card"]')
 
         if fight_card == []:
@@ -74,6 +75,9 @@ class UfcallSpider(scrapy.Spider):
 
         # for the rest of the card
         event_title = response.css('h1 span[itemprop="name"]::text').get() # unsure why I have to initialize this again
+        date: str = response.css('meta[itemprop="startDate"]::attr(content)').get()
+        location: str = response.css('span[itemprop="location"]::text').get()
+
         sub_events = response.css('table[class="new_table result"] tr[itemprop="subEvent"]')
         for event in sub_events:
             left_info = event.css('div[class="fighter_list left"]')

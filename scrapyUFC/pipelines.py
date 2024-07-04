@@ -1,5 +1,5 @@
 from sqlalchemy.orm import sessionmaker
-from scrapyUFC.models import Fighter, Fight, create_table, db_connect 
+from scrapyUFC.models import Fighter, Fight, Event, create_table, db_connect 
 
 
 class UfcPipeline:
@@ -55,10 +55,7 @@ class UfcPipeline:
         fight = Fight()
 
         fight.id = item.id
-        fight.event_title = item.event_title
-        fight.left_fighter_id = item.left_fighter_id
         fight.left_status = item.left_status
-        fight.right_fighter_id = item.right_fighter_id
         fight.right_status = item.right_status 
         fight.weight_class = item.weight_class
         fight.method = item.method
@@ -76,6 +73,30 @@ class UfcPipeline:
         if not existing_fight:
             try:
                 session.add(fight)
+                session.commit()
+            except:
+                session.rollback()
+                raise
+        
+        session.close()
+
+        return item
+    
+    def process_events(self, item):
+        """
+        Save the info of the events into the database
+        """
+        session = self.Session()
+        event = Event()
+
+        event.title = item.title
+        event.date = item.date
+        event.location = item.location
+
+        existing_event = session.query(Event.title).filter_by(title=item.title).first()
+        if not existing_event:
+            try:
+                session.add(event)
                 session.commit()
             except:
                 session.rollback()

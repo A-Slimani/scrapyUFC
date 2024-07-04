@@ -30,3 +30,10 @@ class FighterItem:
     losses_by_ko_tko: int
     losses_by_sub: int
     losses_by_dec: int
+
+@dataclass
+class EventItem:
+    title: str
+    date: str
+    location: str
+    url: str

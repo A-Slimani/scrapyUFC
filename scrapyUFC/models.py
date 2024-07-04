@@ -44,11 +44,8 @@ class Fight(Base):
     __tablename__ = "fights"
 
     id: Mapped[str] = mapped_column(String, primary_key=True)
-    event_title: Mapped[str] = mapped_column(String)
-    left_fighter_id: Mapped[str] = mapped_column(String, ForeignKey('fighters.id'))
     left_fighter_name: Mapped[Optional[str]] = mapped_column(String, nullable=True)
     left_status: Mapped[str] = mapped_column(String)
-    right_fighter_id: Mapped[str] = mapped_column(String, ForeignKey('fighters.id'))
     right_fighter_name: Mapped[Optional[str]] = mapped_column(String, nullable=True)
     right_status: Mapped[str] = mapped_column(String)
     weight_class: Mapped[Optional[str]] = mapped_column(String, nullable=True)
@@ -57,3 +54,9 @@ class Fight(Base):
     time: Mapped[str] = mapped_column(String)
     
 
+class Event(Base):
+    __tablename__ = "events"
+
+    title: Mapped[str] = mapped_column(String, primary_key=True)
+    date: Mapped[str] = mapped_column(String)
+    location: Mapped[str] = mapped_column(String)
