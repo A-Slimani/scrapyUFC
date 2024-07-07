@@ -12,6 +12,8 @@ class UfcEventsAll(scrapy.Spider):
         event_table = response.css('table[class="new_table event"] tr[onclick]')
         for event in event_table:
             title = event.css('span[itemprop="name"]::text').get()
+            if 'Road to UFC' in title: # dont want no Road to UFC events
+                continue
             location = event.css('td[itemprop="location"]::text').get()
             date = event.css('meta[itemprop="startDate"]::attr(content)').get()
             url = event.css('a::attr(href)').get()

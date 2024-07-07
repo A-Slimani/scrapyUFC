@@ -3,13 +3,13 @@ from typing import Optional
 
 @dataclass
 class FightItem:
-    id: str
     event_title: str
     left_fighter_id: str
     left_status: str
     right_fighter_id: str
     right_status: str
     weight_class: str
+    fight_weight: int 
     method: str
     round: Optional[int] 
     time: Optional[str] 

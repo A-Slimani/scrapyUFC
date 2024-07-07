@@ -1,5 +1,6 @@
 from sqlalchemy.orm import sessionmaker
 from scrapyUFC.models import Fighter, Fight, Event, create_table, db_connect 
+from hashlib import sha256
 
 
 class UfcPipeline:
@@ -54,22 +55,29 @@ class UfcPipeline:
         session = self.Session()
         fight = Fight()
 
-        fight.id = item.id
+        # raw fields  
+        fight.event = item.event_title
+        fight.left_fighter_id = item.left_fighter_id
         fight.left_status = item.left_status
+        fight.right_fighter_id = item.right_fighter_id
         fight.right_status = item.right_status 
         fight.weight_class = item.weight_class
+        fight.fight_weight = item.fight_weight
         fight.method = item.method
         fight.round = item.round
         fight.time = item.time
 
-        # get the names of the fighters
+        # get the names of the fighters based of id
         left_fighter_name = session.query(Fighter.name).filter_by(id=item.left_fighter_id).first()
         fight.left_fighter_name = left_fighter_name[0] if left_fighter_name else None
 
         right_fighter_name = session.query(Fighter.name).filter_by(id=item.right_fighter_id).first()
         fight.right_fighter_name = right_fighter_name[0] if right_fighter_name else None
 
-        existing_fight = session.query(Fight.id).filter_by(id=item.id).first()
+        # generate the id for the fight
+        fight.id = sha256(f'{item.left_fighter_id}{item.right_fighter_id}{item.event_title}'.encode('ascii')).hexdigest()
+
+        existing_fight = session.query(Fight).filter_by(id=fight.id).first()
         if not existing_fight:
             try:
                 session.add(fight)
