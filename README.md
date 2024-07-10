@@ -2,6 +2,6 @@
 - Scrapes previous fights and fighter info
 
 ## TODO
-- Create a db layer
-- Store records into db
-- Make everything strictly typed
+- Make this run periodically in the background (with my server)
+- Create a new scraper for upcoming fightcards
+    - Probably just get the one first upcoming
