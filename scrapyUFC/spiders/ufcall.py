@@ -23,6 +23,7 @@ class UfcallSpider(scrapy.Spider):
                     if url not in self.unique_urls and 'Road-to-UFC' not in url:
                         self.unique_urls.add(url)
                         yield scrapy.Request(url=f"https://www.sherdog.com{url}", callback=self.parse_prev_fights, meta={'url': url})
+            # potentially broken
             elif event_table.index(event) == 0:
                 urls = event.css('a::attr(href)').getall()
                 for url in urls:

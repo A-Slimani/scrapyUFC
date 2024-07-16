@@ -11,7 +11,6 @@ class UfcfightersSpider(Spider):
     def start_requests(self):
         with open('missing_urls.csv', 'r') as file:
             reader = csv.reader(file)
-            next(reader) # skip the header
             for row in reader:
                 url = row[0]
                 yield Request(url=f'https://www.sherdog.com{url}', callback=self.parse_fighters, meta={'fighter_url': url})

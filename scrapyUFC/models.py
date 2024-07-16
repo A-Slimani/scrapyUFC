@@ -1,9 +1,10 @@
 from sqlalchemy import create_engine, Integer, String, ForeignKey
-from sqlalchemy.orm import relationship, Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Integer, String 
+from sqlalchemy import Integer, String, Date 
 from scrapy.utils.project import get_project_settings
 from typing import List, Optional
+import datetime as dt
 
 
 Base = declarative_base()
@@ -63,5 +64,5 @@ class Event(Base):
     __tablename__ = "events"
 
     title: Mapped[str] = mapped_column(String, primary_key=True)
-    date: Mapped[str] = mapped_column(String)
+    date: Mapped[dt.date] = mapped_column(Date)
     location: Mapped[str] = mapped_column(String)

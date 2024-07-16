@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from datetime import date
 from typing import Optional 
 
 @dataclass
@@ -34,6 +35,6 @@ class FighterItem:
 @dataclass
 class EventItem:
     title: str
-    date: str
+    date: date 
     location: str
     url: str

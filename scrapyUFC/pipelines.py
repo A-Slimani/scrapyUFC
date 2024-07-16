@@ -77,6 +77,14 @@ class UfcPipeline:
         right_fighter_name = session.query(Fighter.name).filter_by(id=item.right_fighter_id).first()
         fight.right_fighter_name = right_fighter_name[0] if right_fighter_name else None
 
+        if left_fighter_name is None:
+            with open('missing_urls.csv', 'a') as file:
+                file.write(f"/fighter/{item.left_fighter_id}\n")
+        if right_fighter_name is None:
+            with open('missing_urls.csv', 'a') as file:
+                file.write(f"/fighter/{item.right_fighter_id}\n")
+            
+
         # generate the id for the fight
         fight.id = sha256(f'{item.left_fighter_id}{item.right_fighter_id}{item.event_title}'.encode('ascii')).hexdigest()
 
