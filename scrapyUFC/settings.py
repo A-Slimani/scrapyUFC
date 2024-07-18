@@ -26,8 +26,8 @@ ROBOTSTXT_OBEY = False
 CONCURRENT_REQUESTS = 32
 
 # Logging settings
-# LOG_FILE = "spider_errors.log"
-# LOG_LEVEL = "ERROR"
+LOG_FILE = "spider.log"
+LOG_LEVEL = "INFO"
 
 # Configure a delay for requests for the same website (default: 0)
 # See https://docs.scrapy.org/en/latest/topics/settings.html#download-delay

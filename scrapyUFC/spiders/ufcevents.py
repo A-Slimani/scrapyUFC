@@ -15,7 +15,6 @@ class UfcEventsAll(scrapy.Spider):
             if 'Road to UFC' in title: # dont want no Road to UFC events
                 continue
             location: str = event.css('td[itemprop="location"]::text').get()
-            # convert this to a datetime object
             date_str: str = event.css('meta[itemprop="startDate"]::attr(content)').get()[:10]
             date: dt.date = dt.datetime.strptime(date_str, '%Y-%m-%d').date()
             url: str = event.css('a::attr(href)').get()
