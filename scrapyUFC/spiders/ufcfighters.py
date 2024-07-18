@@ -9,7 +9,7 @@ class UfcfightersSpider(Spider):
     allowed_domains = ["www.sherdog.com"]
     
     def start_requests(self):
-        with open('all_fighters_unique_url.csv', 'r') as file:
+        with open('missing_fighters.csv', 'r') as file:
             reader = csv.reader(file)
             for row in reader:
                 url = row[0]

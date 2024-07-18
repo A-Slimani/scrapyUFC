@@ -1,5 +1,6 @@
-from sqlalchemy.orm import sessionmaker
 from scrapyUFC.models import Fighter, Fight, Event, create_table, db_connect 
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy import update
 from hashlib import sha256
 import re
 
@@ -78,18 +79,28 @@ class UfcPipeline:
         fight.right_fighter_name = right_fighter_name[0] if right_fighter_name else None
 
         if left_fighter_name is None:
-            with open('missing_urls.csv', 'a') as file:
+            with open('missing_fighters.csv', 'a') as file:
                 file.write(f"/fighter/{item.left_fighter_id}\n")
         if right_fighter_name is None:
-            with open('missing_urls.csv', 'a') as file:
+            with open('missing_fighters.csv', 'a') as file:
                 file.write(f"/fighter/{item.right_fighter_id}\n")
-            
 
         # generate the id for the fight
         fight.id = sha256(f'{item.left_fighter_id}{item.right_fighter_id}{item.event_title}'.encode('ascii')).hexdigest()
 
         existing_fight = session.query(Fight).filter_by(id=fight.id).first()
-        if not existing_fight:
+        if existing_fight:
+            try:
+                existing_fight.left_status = fight.left_status
+                existing_fight.right_status = fight.right_status
+                existing_fight.method = fight.method
+                existing_fight.round = fight.round
+                existing_fight.time = fight.time
+                session.commit()
+            except:
+                session.rollback()
+                raise
+        else:
             try:
                 session.add(fight)
                 session.commit()

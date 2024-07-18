@@ -1,10 +1,9 @@
 from ..pipelines import UfcPipeline
-from w3lib.html import remove_tags
 from ..items import FightItem
+from w3lib.html import remove_tags
 from typing import Optional
 import datetime as dt
 import scrapy
-import sys
 
 class UfcallSpider(scrapy.Spider):
     name = "ufcall"
@@ -23,7 +22,6 @@ class UfcallSpider(scrapy.Spider):
                     if url not in self.unique_urls and 'Road-to-UFC' not in url:
                         self.unique_urls.add(url)
                         yield scrapy.Request(url=f"https://www.sherdog.com{url}", callback=self.parse_prev_fights, meta={'url': url})
-            # potentially broken
             elif event_table.index(event) == 0:
                 urls = event.css('a::attr(href)').getall()
                 for url in urls:
