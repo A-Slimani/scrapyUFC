@@ -1,0 +1,14 @@
+version: '3.8'
+
+# A temp container to test runs data will not persist
+services:
+  postgres:
+    image: postgres:latest
+    container_name: ufc-db
+    environment:
+      POSTGRES_USER: aboud
+      POSTGRES_PASSWORD: ufcdb00
+      POSTGRES_DB: ufcdb
+    ports:
+      - "5432:5432"
+      

@@ -1,4 +1,4 @@
-import dotenv
+from dotenv import load_dotenv
 import os
 
 # Scrapy settings for scrapyUFC project
@@ -100,7 +100,7 @@ TWISTED_REACTOR = "twisted.internet.asyncioreactor.AsyncioSelectorReactor"
 FEED_EXPORT_ENCODING = "utf-8"
 
 # Load environment variables from .env file
-env = dotenv.load_dotenv()
+load_dotenv()
 
 DB_USER = os.getenv("DB_USER")
 DB_PASSWORD = os.getenv("DB_PASSWORD")
